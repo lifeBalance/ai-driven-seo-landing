@@ -65,56 +65,56 @@ And we should be seeing a `<h1>` bold and underlined, over a blue background; no
 In **version 4** there's no `tailwind.config.ts`, which the course author provided:
 
 ```ts
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/sections/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/sections/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     container: {
       center: true,
       padding: {
-        DEFAULT: "20px",
-        lg: "80px",
+        DEFAULT: '20px',
+        lg: '80px',
       },
       screens: {
-        sm: "375px",
-        md: "768px",
-        lg: "1200px",
+        sm: '375px',
+        md: '768px',
+        lg: '1200px',
       },
     },
     screens: {
-      sm: "375px",
-      md: "768px",
-      lg: "1200px",
+      sm: '375px',
+      md: '768px',
+      lg: '1200px',
     },
     extend: {},
   },
   plugins: [],
-};
-export default config;
+}
+export default config
 ```
 
 So I had to add **theme customizations** in `index.css`:
 
 ```css
 @theme {
-    --breakpoint-sm: 23.4375rem;
-    --breakpoint-md: 48rem;
-    --breakpoint-lg: 75rem;
+  --breakpoint-sm: 23.4375rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 75rem;
 
-    --container-sm: 23.4375rem;
-    --container-md: 48rem;
-    --container-lg: 75rem;
+  --container-sm: 23.4375rem;
+  --container-md: 48rem;
+  --container-lg: 75rem;
 }
 
 @layer components {
-    .container {
-        @apply mx-auto px-4;
-    }
+  .container {
+    @apply mx-auto px-4;
+  }
 }
 ```
 
@@ -153,3 +153,26 @@ import Logo from './logo.svg?react'
 > ```
 > /// <reference types="vite-plugin-svgr/client" />
 > ```
+
+## About the Tailwind `shadow` Syntax
+
+The syntax that we're using (for example in the `<Hero />`) to create [custom value shadows](https://tailwindcss.com/docs/box-shadow#using-a-custom-value) looks a bit weird (ugly imho):
+
+```
+shadow-[-20px_-20px_50px_rgb(255,255,255,.5),-20px_-20px_80px_rgb(255,255,255,.1),0_0_50px_rgb(140,69,255)]
+```
+
+That string is quite hard to parse visually (the Tailwind VSCode plugin helps in case of mistakes), but it translates to this CSS:
+
+```css
+.foo {
+  box-shadow: -20px -20px 50px rgb(255, 255, 255, 0.5), -20px -20px 80px rgb(255, 255, 255, 0.1),
+    0 0 50px rgb(140, 69, 255);
+}
+```
+
+In the code above we're applyin 3 shadows. The [box-shadow](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow) CSS syntax admits several variations; the one above expresses:
+
+```
+<x length> | <y length> | <blur length> | <color>
+```

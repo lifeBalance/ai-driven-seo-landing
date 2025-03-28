@@ -1,10 +1,12 @@
 import Header from '@sections/Header'
+import Hero from './sections/Hero'
 
 function App() {
   return (
-    // <div className='bg-black text-white antialiased'>
+    <>
       <Header />
-    // </div>
+      <Hero />
+    </>
   )
 }
 
