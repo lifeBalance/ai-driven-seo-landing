@@ -47,12 +47,109 @@ Then, the **docs** recommend to add a link to the **compiled CSS** to the `<head
 To test it out, add this to your `App.tsx`:
 
 ```tsx
-
 function App() {
-  return (<h1 className="bg-blue-500 text-white text-3xl font-bold underline">Hello world!</h1>)
+  return (
+    <h1 className="bg-blue-500 text-white text-3xl font-bold underline">
+      Hello world!
+    </h1>
+  )
 }
 
 export default App
 ```
 
 And we should be seeing a `<h1>` bold and underlined, over a blue background; not much but it's honest work.
+
+### Adapting Theme to Tailwind v4
+
+In **version 4** there's no `tailwind.config.ts`, which the course author provided:
+
+```ts
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/sections/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: "20px",
+        lg: "80px",
+      },
+      screens: {
+        sm: "375px",
+        md: "768px",
+        lg: "1200px",
+      },
+    },
+    screens: {
+      sm: "375px",
+      md: "768px",
+      lg: "1200px",
+    },
+    extend: {},
+  },
+  plugins: [],
+};
+export default config;
+```
+
+So I had to add **theme customizations** in `index.css`:
+
+```css
+@theme {
+    --breakpoint-sm: 23.4375rem;
+    --breakpoint-md: 48rem;
+    --breakpoint-lg: 75rem;
+
+    --container-sm: 23.4375rem;
+    --container-md: 48rem;
+    --container-lg: 75rem;
+}
+
+@layer components {
+    .container {
+        @apply mx-auto px-4;
+    }
+}
+```
+
+> [!IMPORTANT]
+> Otherwise, the `container` class wasn't centered, and it lacked horizontal padding.
+
+## Annoying VS Code Warning
+
+If you're getting an annoin, just open the **command palette** (`Ctrl + Shift + P`) and search for **Open Workspace Settings (JSON)**; it will automatically create a `.vscode` folder inside your project (if there wasn't on)containing a `settings.json` file. We should add:
+
+```json
+"files.associations": {
+    "*.css": "tailwindcss"
+},
+```
+
+That way we're telling VS Code to associate `.css` files with the Tailwind package.
+
+## SVG Support
+
+Wouldn't be cool if we could import [svg](https://en.wikipedia.org/wiki/SVG) graphics as if they were React components? There's a cool project named [svgr](https://react-svgr.com/) that allows us to do exactly that! And guess what, there's also a plugin originally named [vite-plugin-svgr](https://www.npmjs.com/package/vite-plugin-svgr) that makes the integration with Vite smooth; let's install it:
+
+```
+npm i -D vite-plugin-svgr
+```
+
+And add it to our `vite.config.ts`; once we do that, we can import our SVG graphics as:
+
+```tsx
+import Logo from './logo.svg?react'
+```
+
+> [!NOTE]
+> Since we're using TypeScript, we should add a [triple slash directive](https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html) that declares a **dependency on a package**. Add the following to `vite-env.d.ts`:
+>
+> ```
+> /// <reference types="vite-plugin-svgr/client" />
+> ```

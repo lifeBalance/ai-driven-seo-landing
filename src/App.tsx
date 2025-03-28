@@ -1,7 +1,11 @@
-import Header from "@sections/Header"
+import Header from '@sections/Header'
 
 function App() {
-  return (<Header />)
+  return (
+    // <div className='bg-black text-white antialiased'>
+      <Header />
+    // </div>
+  )
 }
 
 export default App

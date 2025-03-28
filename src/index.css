@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@theme {
+    --breakpoint-sm: 23.4375rem;
+    --breakpoint-md: 48rem;
+    --breakpoint-lg: 75rem;
+
+    --container-sm: 23.4375rem;
+    --container-md: 48rem;
+    --container-lg: 75rem;
+}
+
+@layer components {
+    .container {
+        @apply mx-auto px-4;
+    }
+}
