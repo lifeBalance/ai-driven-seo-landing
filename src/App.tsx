@@ -4,6 +4,7 @@ import LogoTicker from './sections/LogoTicker'
 import Features from './sections/Features'
 import Testimonials from './sections/Testimonials'
 import CallToAction from './sections/CallToAction'
+import Footer from './sections/Footer'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Features />
       <Testimonials />
       <CallToAction />
+      <Footer />
     </>
   )
 }
