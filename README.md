@@ -176,3 +176,27 @@ In the code above we're applyin 3 shadows. The [box-shadow](https://developer.mo
 ```
 <x length> | <y length> | <blur length> | <color>
 ```
+
+## Lottie Files
+
+[Lottie](https://lottiefiles.com/) is a relatively new (2015) format for [vector graphics](https://en.wikipedia.org/wiki/Vector_graphics) based in JSON, and intended as a lighter alternative to animated GIF and PNG files.
+
+> [!NOTE]
+> Lottie is [open source](https://lottie.github.io/)
+
+In order to make use of files in this format, we need a [dotLottie runtime](https://lottiefiles.com/runtimes). Each platform (Android, IOS, React, Vue, etc) needs a runtime. There are a lot of libraries that do that in React, but it seems the official one is [dotlottie-react](https://www.npmjs.com/package/@lottiefiles/dotlottie-react), so let's install it:
+
+```
+npm i @lottiefiles/dotlottie-react
+```
+
+Using it it's very simple:
+
+```js
+import React from 'react'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+
+const App = () => {
+  return <DotLottieReact src="path/to/animation.lottie" loop autoplay />
+}
+```
