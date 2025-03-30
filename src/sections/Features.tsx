@@ -1,5 +1,6 @@
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import { DotLottie, DotLottieReact } from '@lottiefiles/dotlottie-react'
 import productImage from '@assets/product-image.png'
+import { useState } from 'react'
 
 export default function Features() {
   return (
@@ -16,22 +17,7 @@ export default function Features() {
 
         <div className="mt-10 flex flex-col lg:flex-row gap-3">
           {tabs.map((tab: Tab, idx: number) => (
-            <div
-              key={`${idx}-${tab.title}`}
-              className="border border-white/15 flex p-2.5 rounded-xl gap-2.5 items-center lg:flex-1"
-            >
-              <div className="h-12 w-12 border border-white/15 rounded-lg inline-flex items-center justify-center">
-                <DotLottieReact src={tab.icon} autoplay className="w-5 h-5" />
-              </div>
-
-              <div>{tab.title}</div>
-
-              {tab.isNew && (
-                <div className="text-xs rounded-full px-2 py-0.5 bg-[#8c44ff] text-black font-semibold">
-                  new
-                </div>
-              )}
-            </div>
+            <Tab key={`${idx}-${tab.title}`} tab={tab} />
           ))}
         </div>
 
@@ -45,6 +31,46 @@ export default function Features() {
         </div>
       </div>
     </section>
+  )
+}
+
+const Tab = ({ tab }: { tab: (typeof tabs)[number] }) => {
+  const [dotLottie, setDotLottie] = useState<DotLottie | null>(null)
+
+  const dotLottieRefCallback: (
+    dotLottie: DotLottie | null,
+  ) => void = dotLottie => {
+    setDotLottie(dotLottie)
+  }
+
+  function play() {
+    if (dotLottie) {
+      dotLottie.play()
+    }
+  }
+
+  return (
+    <div
+      onMouseEnter={play}
+      className="border border-white/15 flex p-2.5 rounded-xl gap-2.5 items-center lg:flex-1"
+    >
+      <div className="h-12 w-12 border border-white/15 rounded-lg inline-flex items-center justify-center">
+        <DotLottieReact
+          dotLottieRefCallback={dotLottieRefCallback}
+          src={tab.icon}
+          autoplay
+          className="w-5 h-5"
+        />
+      </div>
+
+      <div>{tab.title}</div>
+
+      {tab.isNew && (
+        <div className="text-xs rounded-full px-2 py-0.5 bg-[#8c44ff] text-black font-semibold">
+          new
+        </div>
+      )}
+    </div>
   )
 }
 
