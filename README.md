@@ -244,3 +244,72 @@ const Tab = ({ tab }: { tab: (typeof tabs)[number] }) => {
   )
 }
 ```
+
+## Deploying to GitHub Pages
+
+1. In my `package.json` file, set the `homepage` property to:
+
+```json
+"homepage": "https://<username>.github.io/<repo-name>"
+```
+
+2. Configure `vite.config.js`: Since GitHub Pages serves **static files** from a subdirectory (`/<repo-name>/`), we need to set the `base` option:
+
+```js
+base: '/light-saas/',
+```
+
+> [!IMPORTANT]
+> Commit in `main`, and **push**.
+
+3. Now we have to create the `gh-pages` branch, **build** our app (outputs to `/dist`); since this folder is usually in `.gitignore`, we must **force** its addition. Finally **commit** and push only `/dist` to the `gh-pages` branch:
+
+```
+git checkout -b gh-pages   # Create gh-pages branch
+npm run build              # Build the app (outputs to /dist)
+git add dist -f            # Force-add the build output
+git commit -m "Deploy to GitHub Pages"
+git subtree push --prefix dist origin gh-pages  # Push only /dist to gh-pages
+```
+
+4. In `GitHub > Repo Settings > Pages`, we have to select deploy from branch `gh-pages`. Since the `dist` folder is the only thing we have in this branch, selecting `/` (root) as the folder works fine.
+
+### About `git subtree`
+
+`subtree` is a Git command that allows you to work with a subdirectory of your repository as if it were its own repository. It is useful for deploying or sharing only a part of your project (e.g., the `dist` folder) without including the rest of the repository.
+
+> [!NOTE]
+> In some Linux distros this command is not included. In Fedora for example, I had to install with:
+>
+> ```
+> sudo dnf install git-subtree
+> ```
+
+The `--prefix dist` option takes the contents of the `dist` folder; that's why in `GitHub > Repo Settings > Pages` we select `/` (root).
+
+> [!NOTE]
+> In case you don't remember, `origin` is the name of the [remote], an `gh-pages` is the name of the branch we want to push.
+
+### Final set up
+
+Before running the script for the first time, you need to manually create the `gh-pages` branch:
+
+```sh
+git checkout -b gh-pages
+git push origin gh-pages
+```
+
+> [!IMPORTANT]
+> Creating the `gh-pages` branch and pushing it to the remote is essential.
+
+The we can add this to the `scripts` section of our `package.json` file:
+
+```json
+"deploy": "npm run build && git add dist -f && git commit -m \"Deploy to GH Pages\" && git subtree push --prefix dist origin gh-pages"
+```
+
+If we wanted to, we could even add:
+
+```json
+"setup-gh-pages": "git checkout -b gh-pages && git push origin gh-pages",
+```
