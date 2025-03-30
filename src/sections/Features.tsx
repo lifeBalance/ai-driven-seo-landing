@@ -8,10 +8,47 @@ import {
   ValueAnimationTransition,
 } from 'framer-motion'
 import { motion } from 'framer-motion'
+import { twMerge } from 'tailwind-merge'
 
 export default function Features() {
   const [selectedTab, setSelectedTab] = useState(0)
+  const backgroundPositionX = useMotionValue(tabs[0].backgroundPositionX)
+  const backgroundPositionY = useMotionValue(tabs[0].backgroundPositionY)
+  const backgroundSizeX = useMotionValue(tabs[0].backgroundSize)
 
+  const backgroundPosition = useMotionTemplate`${backgroundPositionX}% ${backgroundPositionY}%`
+  const backgroundSize = useMotionTemplate`${backgroundSizeX}% auto`
+
+  const handleSelectTab = (index: number) => {
+    setSelectedTab(index)
+    // Quick test
+    // backgroundPositionX.set(tabs[index].backgroundPositionX)
+    // backgroundPositionY.set(tabs[index].backgroundPositionY)
+    // backgroundSizeX.set(tabs[index].backgroundSize)
+
+    animate(
+      backgroundSizeX,
+      [backgroundSizeX.get(), 100, tabs[index].backgroundSize],{
+        duration: 2,
+        ease: 'easeInOut',
+      },
+    )
+    animate(
+      backgroundPositionX,
+      [backgroundPositionX.get(), 100, tabs[index].backgroundPositionX],{
+        duration: 2,
+        ease: 'easeInOut',
+      },
+
+    )
+    animate(
+      backgroundPositionY,
+      [backgroundPositionY.get(), 100, tabs[index].backgroundPositionY],{
+        duration: 2,
+        ease: 'easeInOut',
+      },
+    )
+  }
   return (
     <section className="py-20 md:py-24">
       <div className="container">
@@ -24,30 +61,27 @@ export default function Features() {
           revolutionized the way businesses approach SEO.
         </p>
 
-        <div className="mt-10 flex flex-col lg:flex-row gap-3">
+        <div className="mt-10 flex flex-col lg:flex-row gap-3 cursor-pointer">
           {tabs.map((tab: Tab, idx: number) => (
             <Tab
               key={`${idx}-${tab.title}`}
               {...tab}
-              // icon={tab.icon}
-              // title={tab.title}
-              // isNew={tab.isNew}
-              // backgroundPositionX={tab.backgroundPositionX}
-              // backgroundPositionY={tab.backgroundPositionY}
-              // backgroundSize={tab.backgroundSize}
               selected={idx === selectedTab}
-              onClick={() => setSelectedTab(idx)}
+              // onClick={() => setSelectedTab(idx)}
+              onClick={() => handleSelectTab(idx)}
             />
           ))}
         </div>
 
         <div className="border border-white/20 flex p-2.5 rounded-xl mt-3">
-          <div
-            className="aspect-video h-64 w-full bg-cover border border-white/20 rounded-lg"
+          <motion.div
+            className="aspect-video w-full bg-cover border border-white/20 rounded-lg"
             style={{
               backgroundImage: `url(${productImage})`,
+              backgroundPosition,
+              backgroundSize,
             }}
-          ></div>
+          ></motion.div>
         </div>
       </div>
     </section>
@@ -59,6 +93,7 @@ const Tab = (
     ComponentPropsWithoutRef<'div'> & { selected: boolean },
 ) => {
   const [dotLottie, setDotLottie] = useState<DotLottie | null>(null)
+  const [isHovered, setIsHovered] = useState(false)
   const tabRef = useRef<HTMLDivElement>(null)
 
   // For the border animation
@@ -70,13 +105,13 @@ const Tab = (
     yPercentage.set(0)
 
     const { height, width } = tabRef.current.getBoundingClientRect()
-    const circumference = height * 2 + width * 2
-    // Times is a sequence of values between 0 and 1 that represent the percentage of the animation
+    const perimeter = height * 2 + width * 2
+    // 'times' is a sequence of values between 0 and 1 that represent the percentage of the animation
     const times = [
       0,
-      width / circumference,
-      (width + height) / circumference,
-      (width * 2 + height) / circumference,
+      width / perimeter,
+      (width + height) / perimeter,
+      (width * 2 + height) / perimeter,
       1,
     ]
     const options: ValueAnimationTransition = {
@@ -100,6 +135,11 @@ const Tab = (
     if (dotLottie) {
       dotLottie.play()
     }
+    setIsHovered(true)
+  }
+
+  function stop() {
+    setIsHovered(false)
   }
 
   // Border animation
@@ -111,6 +151,7 @@ const Tab = (
     <div
       ref={tabRef}
       onMouseEnter={play}
+      onMouseLeave={stop}
       onClick={props.onClick}
       className="border border-white/15 flex p-2.5 rounded-xl gap-2.5 items-center lg:flex-1 relative"
     >
@@ -121,7 +162,12 @@ const Tab = (
         ></motion.div>
       )}
 
-      <div className="h-12 w-12 border border-white/15 rounded-lg inline-flex items-center justify-center">
+      <div
+        className={twMerge(
+          'h-12 w-12 border border-white/15 rounded-lg inline-flex items-center justify-center transition-colors duration-300',
+          isHovered && 'border-white/35',
+        )}
+      >
         <DotLottieReact
           dotLottieRefCallback={dotLottieRefCallback}
           src={props.icon}
