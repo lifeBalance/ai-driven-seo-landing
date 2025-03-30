@@ -6,6 +6,7 @@ import svgr from 'vite-plugin-svgr'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/ai-driven-seo-landing/',
   plugins: [react(), tailwindcss(), svgr({ include: '**/*.svg?react' })],
   // aliases
   resolve: {
