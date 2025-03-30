@@ -196,10 +196,13 @@ interface Tab {
   backgroundSize: number
 }
 
-// Lottie icons come from the public folder
+// Lottie icons come from the public folder, hence we have to use
+// import.meta.env.BASE_URL to get the correct ABSOLUTE PATH,
+// which varies depending on the environment (dev or prod).
+// https://vitejs.dev/guide/assets.html#the-public-directory
 const tabs = [
   {
-    icon: '/assets/lottie/vroom.lottie',
+    icon: `${import.meta.env.BASE_URL}assets/lottie/vroom.lottie`,
     title: 'User-friendly dashboard',
     isNew: false,
     backgroundPositionX: 0,
@@ -207,7 +210,7 @@ const tabs = [
     backgroundSize: 150,
   },
   {
-    icon: '/assets/lottie/click.lottie',
+    icon: `${import.meta.env.BASE_URL}assets/lottie/click.lottie`,
     title: 'One-click optimization',
     isNew: false,
     backgroundPositionX: 98,
@@ -215,7 +218,7 @@ const tabs = [
     backgroundSize: 135,
   },
   {
-    icon: '/assets/lottie/stars.lottie',
+    icon: `${import.meta.env.BASE_URL}assets/lottie/stars.lottie`,
     title: 'Smart keyword generation',
     isNew: true,
     backgroundPositionX: 100,
